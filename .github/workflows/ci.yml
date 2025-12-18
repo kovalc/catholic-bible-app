@@ -1,0 +1,41 @@
+name: terraform-ci
+
+on:
+  pull_request:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-west-2
+
+      - name: Terraform fmt
+        working-directory: infra
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init
+        working-directory: infra
+        run: terraform init
+
+      - name: Terraform validate
+        working-directory: infra
+        run: terraform validate
+
+      - name: Terraform plan
+        working-directory: infra
+        run: terraform plan
