@@ -1,34 +1,52 @@
-# Gradle files
+########################################
+# Android / Gradle
+########################################
+*.iml
 .gradle/
 build/
+**/build/
 
-# Local configuration file (sdk path, etc)
+# Local SDK / machine-specific
 local.properties
 
-# Log/OS Files
-*.log
-
-# Android Studio generated files and folders
-captures/
+# Native build outputs
 .externalNativeBuild/
 .cxx/
-*.aab
-*.apk
-output-metadata.json
 
-# IntelliJ
-*.iml
+########################################
+# Android Studio / IntelliJ
+########################################
 .idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
+.idea/**
 
-# Keystore files
-*.jks
-*.keystore
+########################################
+# OS junk
+########################################
+.DS_Store
+Thumbs.db
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+########################################
+# Terraform
+########################################
+**/.terraform/
+**/.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+terraform.tfstate
+terraform.tfstate.backup
+crash.log
+crash.*.log
 
-# Android Profiling
-*.hprof
+########################################
+# AWS Lambda / Python
+########################################
+**/__pycache__/
+*.pyc
+*.pyo
+*.zip
+
+########################################
+# Environment / secrets
+########################################
+.env
+.env.*
