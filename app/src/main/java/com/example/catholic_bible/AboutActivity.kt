@@ -9,6 +9,15 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
 
-        supportActionBar?.title = "About"
+        // Set title
+        supportActionBar?.apply {
+            title = getString(R.string.title_about)
+            setDisplayHomeAsUpEnabled(true) // back arrow
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 }
