@@ -7,6 +7,9 @@
     <!-- Needed to set the device wallpaper -->
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
+    <!-- Android 13+ notifications permission (harmless on older versions) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,7 +20,7 @@
 
         <!-- Main launcher activity -->
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,27 +28,19 @@
             </intent-filter>
         </activity>
 
-        <!-- Settings screen -->
+        <!-- Settings screen (FIXED: correct package) -->
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ui.SettingsActivity"
             android:exported="false"
             android:label="@string/title_settings"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
+            android:parentActivityName=".ui.MainActivity" />
 
         <!-- About screen -->
         <activity
-            android:name=".AboutActivity"
+            android:name=".ui.AboutActivity"
             android:exported="false"
             android:label="@string/title_about"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
+            android:parentActivityName=".ui.MainActivity" />
 
     </application>
 

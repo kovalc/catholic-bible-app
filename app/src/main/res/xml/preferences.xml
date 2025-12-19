@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:key="pref_daily_notification_enabled"
+        app:title="Daily verse notification"
+        app:summary="Get a notification with today’s verse"
+        app:defaultValue="true" />
+
+    <PreferenceCategory
+        app:title="Notification time">
+
+        <ListPreference
+            app:key="pref_notification_hour"
+            app:title="Hour"
+            app:defaultValue="7"
+            app:entries="@array/pref_hours_entries"
+            app:entryValues="@array/pref_hours_values" />
+
+        <ListPreference
+            app:key="pref_notification_minute"
+            app:title="Minute"
+            app:defaultValue="0"
+            app:entries="@array/pref_minutes_entries"
+            app:entryValues="@array/pref_minutes_values" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

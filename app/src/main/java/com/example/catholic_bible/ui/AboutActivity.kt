@@ -1,7 +1,8 @@
-package com.example.catholic_bible
+package com.example.catholic_bible.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.catholic_bible.R
 
 class AboutActivity : AppCompatActivity() {
 

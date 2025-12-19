@@ -122,18 +122,29 @@ resource "aws_iam_role_policy" "daily_verse_lambda_policy" {
         Resource = "arn:aws:logs:*:*:*"
       },
 
-      # DynamoDB (Bible + VerseOfTheDay)
+      # DynamoDB - BibleVerses READ (includes Query on the GSI)
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:Query",
+          "dynamodb:Scan"
+        ]
+        Resource = [
+          aws_dynamodb_table.bible_verses.arn,
+          "${aws_dynamodb_table.bible_verses.arn}/index/canonical-index-gsi"
+        ]
+      },
+
+      # DynamoDB - VerseOfTheDay WRITE/READ
       {
         Effect = "Allow"
         Action = [
           "dynamodb:GetItem",
           "dynamodb:PutItem",
-          "dynamodb:Query"
+          "dynamodb:UpdateItem"
         ]
-        Resource = [
-          aws_dynamodb_table.bible_verses.arn,
-          aws_dynamodb_table.verse_of_the_day.arn
-        ]
+        Resource = aws_dynamodb_table.verse_of_the_day.arn
       },
 
       # S3 image bucket
@@ -141,7 +152,8 @@ resource "aws_iam_role_policy" "daily_verse_lambda_policy" {
         Effect = "Allow"
         Action = [
           "s3:PutObject",
-          "s3:GetObject"
+          "s3:GetObject",
+          "s3:PutObjectAcl"
         ]
         Resource = "${aws_s3_bucket.votd_images.arn}/*"
       },
@@ -177,7 +189,6 @@ resource "aws_lambda_function" "daily_verse" {
   filename         = data.archive_file.daily_verse_zip.output_path
   source_code_hash = data.archive_file.daily_verse_zip.output_base64sha256
 
-  # Plenty of time for OpenAI + S3
   timeout = 120
 
   environment {
@@ -188,7 +199,6 @@ resource "aws_lambda_function" "daily_verse" {
       IMAGE_BUCKET_NAME       = aws_s3_bucket.votd_images.bucket
       APP_TIMEZONE            = "America/Chicago"
 
-      # Secret name used by backend/daily_verse_lambda/handler.py
       OPENAI_SECRET_NAME = data.aws_secretsmanager_secret.openai_api_key.name
     }
   }

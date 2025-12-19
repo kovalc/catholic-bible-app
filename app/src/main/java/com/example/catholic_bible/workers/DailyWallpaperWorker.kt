@@ -1,10 +1,11 @@
-package com.example.catholic_bible
+package com.example.catholic_bible.workers
 
 import android.app.WallpaperManager
 import android.content.Context
 import android.graphics.BitmapFactory
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.catholic_bible.ui.VerseResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
