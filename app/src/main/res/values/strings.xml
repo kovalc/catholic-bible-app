@@ -9,4 +9,6 @@
     <string name="settings_placeholder">
     Settings screen coming soon. Here you’ll control wallpaper behavior and notifications.
     </string>
+    <string name="privacy_policy_url">https://yourdomain.com/privacy</string>
+    <string name="about_body">Catholic Bible Wallpaper shows a new Catholic Bible verse and devotional image each day, and can automatically update your wallpaper.</string>
 </resources>

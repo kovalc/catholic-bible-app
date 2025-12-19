@@ -5,79 +5,42 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.catholic_bible.ui.VerseResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.example.catholic_bible.network.VerseService
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-
-// We REUSE the existing VerseResponse from MainActivity.kt.
-// Do NOT redefine it here.
-
-/**
- * Separate API interface for the worker (could also reuse VerseApi if you want).
- */
-interface VerseApiWorker {
-    @GET("verse/today")
-    suspend fun getVerseToday(): VerseResponse
-}
 
 class DailyWallpaperWorker(
-    context: Context,
-    workerParams: WorkerParameters
-) : CoroutineWorker(context, workerParams) {
+    appContext: Context,
+    params: WorkerParameters
+) : CoroutineWorker(appContext, params) {
 
-    private val verseApi: VerseApiWorker by lazy {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://s4abq0nc6a.execute-api.us-west-2.amazonaws.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    private val client = OkHttpClient()
 
-        retrofit.create(VerseApiWorker::class.java)
-    }
-
-    private val httpClient = OkHttpClient()
-
-    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        try {
-            // 1) Get verse of the day (includes image_url)
-            val verse = verseApi.getVerseToday()
-            val imageUrl = verse.image_url
+    override suspend fun doWork(): Result {
+        return try {
+            val verse = VerseService.api.getVerseToday()
+            val imageUrl = verse.imageUrl
 
             if (imageUrl.isNullOrBlank()) {
-                // No image = nothing to set, but job succeeded
-                return@withContext Result.success()
+                return Result.success() // nothing to set
             }
 
-            // 2) Download the image bytes
-            val request = Request.Builder().url(imageUrl).build()
-            val response = httpClient.newCall(request).execute()
-            if (!response.isSuccessful) {
-                response.close()
-                return@withContext Result.retry()
+            val request = Request.Builder()
+                .url(imageUrl)
+                .build()
+
+            client.newCall(request).execute().use { resp ->
+                if (!resp.isSuccessful) return Result.retry()
+
+                val bytes = resp.body?.bytes() ?: return Result.retry()
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return Result.retry()
+
+                val wm = WallpaperManager.getInstance(applicationContext)
+                wm.setBitmap(bitmap)
             }
-
-            val bytes = response.body?.bytes()
-            response.close()
-
-            if (bytes == null) {
-                return@withContext Result.retry()
-            }
-
-            // 3) Decode to Bitmap
-            val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                ?: return@withContext Result.retry()
-
-            // 4) Set as wallpaper
-            val wm = WallpaperManager.getInstance(applicationContext)
-            wm.setBitmap(bitmap)
 
             Result.success()
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (_: Exception) {
             Result.retry()
         }
     }

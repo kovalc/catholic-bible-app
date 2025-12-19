@@ -3,13 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_settings"
-        android:title="Settings"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_about"
-        android:title="About"
+        android:id="@+id/action_refresh"
+        android:title="Refresh"
         app:showAsAction="never" />
 
     <item
@@ -18,4 +13,13 @@
         android:icon="@drawable/ic_volume_up_24"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_settings"
+        android:title="Settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_about"
+        android:title="About"
+        app:showAsAction="never" />
 </menu>

@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Needed to call your AWS API -->
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- Needed to set the device wallpaper -->
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
-
-    <!-- Android 13+ notifications permission (harmless on older versions) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -18,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CatholicBible">
 
-        <!-- Main launcher activity -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
@@ -28,18 +22,14 @@
             </intent-filter>
         </activity>
 
-        <!-- Settings screen (FIXED: correct package) -->
         <activity
             android:name=".ui.SettingsActivity"
             android:exported="false"
-            android:label="@string/title_settings"
             android:parentActivityName=".ui.MainActivity" />
 
-        <!-- About screen -->
         <activity
             android:name=".ui.AboutActivity"
             android:exported="false"
-            android:label="@string/title_about"
             android:parentActivityName=".ui.MainActivity" />
 
     </application>
